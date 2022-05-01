@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            canvas{
+                border: 5px solid rgb(0, 0, 0);
+                background: url('img/background1.png');
+                background-size: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="mycanvas" width="1324px" height="605px"></canvas>
+        
+    </body>
+    <script>
+            let canvas= document.getElementById('mycanvas');
+            let pen = canvas.getContext('2d');
+            let gameH= canvas.height;
+            let gameW= canvas.width;
+            let gameOver = false;
+            //pen.fillRect(15, 15, 30, 30);
+
+            let enemyImg = new Image;
+            enemyImg.src="img/gengar.png";
+
+            let playerImg = new Image;
+            playerImg.src ="img/pika.png";
+
+            // JSON
+            let enemy = {
+                x : 150,
+                y : 100,
+                w : 70,
+                h : 70,
+                speed : 5,
+            }
+            
+            let enemy2 = {
+                x : 400,
+                y : 500,
+                w : 70,
+                h : 70,
+                speed : 5,
+            }
+
+            let enemy3 = {
+                x : 650,
+                y : 100,
+                w : 70,
+                h : 70,
+                speed : 5,
+            }
+
+            let enemy4 = {
+                x : 950,
+                y : 400,
+                w : 70,
+                h : 70,
+                speed : 5,
+            }
+            let player = {
+                x : 0,
+                y : gameH/2-30,
+                w : 60,
+                h : 60,
+                speed : 5,
+                isMoving : false,
+            }
+            canvas.addEventListener('mousedown' , function(){
+                player.isMoving = true;
+                //player.x = player.x + player.speed;
+            });
+
+            canvas.addEventListener('mouseup', function(){
+              player.isMoving = false;
+            });
+
+            function isColliding(r1, r2){
+              let side=r1.w;
+              if(Math.abs(r1.x - r2.x) <= side && Math.abs(r1.y - r2.y)<=side){
+                return true;
+              }
+              return false;
+            }
+
+            function draw(){
+                pen.clearRect(0, 0, gameW, gameH);
+                //pen.fillStyle = "green";
+                //pen.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
+                pen.drawImage(enemyImg, enemy.x, enemy.y, enemy.w, enemy.h);
+                pen.drawImage(enemyImg, enemy2.x, enemy2.y, enemy2.w, enemy2.h);
+                pen.drawImage(enemyImg, enemy3.x, enemy3.y, enemy3.w, enemy3.h);
+                pen.drawImage(enemyImg, enemy4.x, enemy4.y, enemy4.w, enemy4.h);
+                pen.drawImage(playerImg, player.x, player.y, player.w, player.h);
+            }
+            function update(){
+                if(player.isMoving == true){
+                    player.x = player.x + player.speed;
+                }
+                //enemy1
+                enemy.y +=enemy.speed;
+                if(enemy.y == gameH - enemy.h || enemy.y <=0){
+                    enemy.speed *= -1;
+                }
+                //enemy2
+                enemy2.y +=enemy2.speed;
+                if(enemy2.y == gameH - enemy2.h || enemy2.y <=0){
+                    enemy2.speed *= -1;
+                }
+
+                //enemy3
+                enemy3.y +=enemy3.speed;
+                if(enemy3.y == gameH - enemy3.h || enemy3.y <=0){
+                    enemy3.speed *= -1;
+                }
+
+                //enemy 4
+                enemy4.y +=enemy4.speed;
+                if(enemy4.y == gameH - enemy4.h || enemy4.y <=0){
+                    enemy4.speed *= -1;
+                }
+                // check for collision for enemy 1
+                if(isColliding(enemy, player)){
+                  alert("GAME OVER, SCORE: " +  player.x, 20, 50);
+                  gameOver = true;
+                }
+                // check for collision for enemy2
+                if(isColliding(enemy2, player)){
+                  alert("GAME OVER, SCORE: " +  player.x, 20, 50);
+                  gameOver = true;
+                }
+
+                // check for collision for enemy3
+                if(isColliding(enemy3, player)){
+                  alert("GAME OVER, SCORE: " +  player.x, 20, 50);
+                  gameOver = true;
+                }
+                // check for collision for enemy 4
+                if(isColliding(enemy4, player)){
+                  alert("GAME OVER, SCORE: " +  player.x, 20, 50);
+                  gameOver = true;
+                }
+                if(player.x > gameW - player.w){
+                  alert("YOU WON");
+                  gameOver = true;
+                }
+            }
+            function render(){
+                draw();
+                update();
+                //console.log("In render");
+                // 60fps
+                if(!gameOver){
+                  window.requestAnimationFrame(render);
+                }    
+            }
+            render();
+        </script>
+</html>
